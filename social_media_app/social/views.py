@@ -4,9 +4,11 @@ from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from .models import Post, Feel
 
+
 def home(request):
     posts = Post.objects.all()
     return render(request, 'social/home.html', {'posts': posts})
+
 
 def signup(request):
     if request.method == 'POST':
@@ -19,6 +21,7 @@ def signup(request):
         form = UserCreationForm()
     return render(request, 'registration/signup.html', {'form': form})
 
+
 @login_required
 def create_post(request):
     if request.method == 'POST':
@@ -26,6 +29,7 @@ def create_post(request):
         Post.objects.create(user=request.user, content=content)
         return redirect('home')
     return render(request, 'social/create_post.html')
+
 
 @login_required
 def update_post(request, post_id):
@@ -36,6 +40,7 @@ def update_post(request, post_id):
         return redirect('home')
     return render(request, 'social/update_post.html', {'post': post})
 
+
 @login_required
 def delete_post(request, post_id):
     post = get_object_or_404(Post, id=post_id, user=request.user)
@@ -43,6 +48,7 @@ def delete_post(request, post_id):
         post.delete()
         return redirect('home')
     return render(request, 'social/delete_post.html', {'post': post})
+
 
 @login_required
 def add_feel(request, post_id):
