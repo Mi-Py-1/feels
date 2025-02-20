@@ -6,22 +6,59 @@
 <h1>Welcome to the Social Media App</h1>
 {% if user.is_authenticated %}
     <p>Hello, {{ user.username }}!</p>
-    <a href="{% url 'logout' %}" class="btn btn-primary">Logout</a>
+    <a href="{% url 'logout' %}" class="btn btn-primary" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
+    <form id="logout-form" action="{% url 'logout' %}" method="post" style="display: none;">
+        {% csrf_token %}
+    </form>
     <a href="{% url 'create_post' %}" class="btn btn-primary">Create Post</a>
 {% else %}
     <a href="{% url 'login' %}" class="btn btn-primary">Login</a>
     <a href="{% url 'signup' %}" class="btn btn-primary">Sign Up</a>
 {% endif %}
 
-<h2>Posts</h2>
-{% for post in posts %}
-    <div class="card mb-3">
-        <div class="card-body">
-            <h5 class="card-title">{{ post.user.username }}</h5>
-            <p class="card-text">{{ post.content }}</p>
-            <p class="card-text"><small class="text-muted">Posted on: {{ post.created_at }}</small></p>
-            <a href="{% url 'add_feel' post.id %}" class="btn btn-primary">Add Feel</a>
+{% if user.is_authenticated %}
+    <h2>Posts</h2>
+    {% for post in posts %}
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">{{ post.user.username }}</h5>
+                <p class="card-text">{{ post.content }}</p>
+                <p class="card-text"><small class="text-muted">Posted on: {{ post.created_at }}</small></p>
+                <a href="{% url 'add_feel' post.id %}" class="btn btn-primary">Add Feel</a>
+            </div>
+        </div>
+    {% endfor %}
+{% endif %}
+
+<!-- Logout Modal -->
+<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="logoutModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="logoutModalLabel">Logged Out</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                You have successfully logged out. We hope to see you again soon!
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
         </div>
     </div>
-{% endfor %}
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Show the logout modal if redirected from the logout view
+    {% if not user.is_authenticated and request.GET.show_logout_modal %}
+    $(document).ready(function() {
+        $('#logoutModal').modal('show');
+    });
+    {% endif %}
+</script>
 {% endblock %}
