@@ -51,14 +51,3 @@
 </div>
 
 {% endblock %}
-
-{% block extra_js %}
-<script>
-    // Show the logout modal if redirected from the logout view
-    {% if not user.is_authenticated and request.GET.show_logout_modal %}
-    $(document).ready(function() {
-        $('#logoutModal').modal('show');
-    });
-    {% endif %}
-</script>
-{% endblock %}
