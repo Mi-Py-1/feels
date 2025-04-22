@@ -3,6 +3,9 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
+<!-- Notifications Section -->
+<div id="notifications" class="mt-3"></div>
+
 <h1>Welcome to Feels. How are you Feeling?</h1>
 {% if user.is_authenticated %}
     <p>Hello, {{ user.username }}!</p>

@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from .models import Post, Feel
 from django.contrib import messages
+from django.http import JsonResponse
 
 def home(request):
     posts = Post.objects.all().order_by('-created_at')  # Order posts by newest first
@@ -39,6 +40,7 @@ def update_post(request, post_id):
     if request.method == 'POST':
         post.content = request.POST.get('content')
         post.save()
+        messages.success(request, 'Post updated successfully!')
         return redirect('home')
     return render(request, 'social/update_post.html', {'post': post})
 
@@ -57,9 +59,22 @@ def add_feel(request, post_id):
     if request.method == 'POST':
         rating = request.POST.get('rating')
         Feel.objects.create(post=post, user=request.user, rating=rating)
+        if created:
+            messages.success(request, 'Your feel has been added to the post!')
+        else:
+            messages.info(request, 'You have already added a feel to this post.')
         return redirect('home')
     return render(request, 'social/add_feel.html', {'post': post})
 
 def custom_logout(request):
     auth_logout(request)
     return redirect('/?show_logout_modal=true')
+
+@login_required
+def notifications(request):
+    # Example notifications (replace with your logic)
+    notifications = [
+        {"message": "New post created!", "tag": "success"},
+        {"message": "You have a new feel!", "tag": "info"},
+    ]
+    return JsonResponse({"notifications": notifications})
