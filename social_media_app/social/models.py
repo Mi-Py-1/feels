@@ -15,4 +15,4 @@ class Feel(models.Model):
     class Meta:
         constraints = [
             models.UniqueConstraint(fields=['post', 'user'], name='unique_user_post_feel')
-        ]
+        ]             

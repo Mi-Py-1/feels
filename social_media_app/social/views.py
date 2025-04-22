@@ -2,11 +2,16 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login, logout as auth_logout
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 from .models import Post, Feel
+from django.contrib import messages
 
 def home(request):
-    posts = Post.objects.all()
-    return render(request, 'social/home.html', {'posts': posts})
+    posts = Post.objects.all().order_by('-created_at')  # Order posts by newest first
+    paginator = Paginator(posts, 5)  # Show 5 posts per page
+    page_number = request.GET.get('page')  # Get the current page number from the URL
+    page_obj = paginator.get_page(page_number)  # Get the posts for the current page
+    return render(request, 'social/home.html', {'page_obj': page_obj})
 
 def signup(request):
     if request.method == 'POST':
@@ -24,6 +29,7 @@ def create_post(request):
     if request.method == 'POST':
         content = request.POST.get('content')
         Post.objects.create(user=request.user, content=content)
+        messages.success(request, 'Post created successfully!')
         return redirect('home')
     return render(request, 'social/create_post.html')
 
@@ -41,6 +47,7 @@ def delete_post(request, post_id):
     post = get_object_or_404(Post, id=post_id, user=request.user)
     if request.method == 'POST':
         post.delete()
+        messages.success(request, 'Post deleted successfully!')
         return redirect('home')
     return render(request, 'social/delete_post.html', {'post': post})
 
