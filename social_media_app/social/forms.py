@@ -27,8 +27,6 @@ class PostForm(forms.ModelForm):
         return content
     
 class CustomUserCreationForm(UserCreationForm):
-    role = forms.ChoiceField(choices=CustomUser.ROLE_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
-
     class Meta:
         model = CustomUser
-        fields = ['username', 'email', 'password1', 'password2', 'role']
+        fields = ['username', 'email', 'password1', 'password2']
