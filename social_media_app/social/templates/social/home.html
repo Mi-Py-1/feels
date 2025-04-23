@@ -8,7 +8,6 @@
 
 <h1>Welcome to Feels. How are you Feeling?</h1>
 {% if user.is_authenticated %}
-    <p>Hello, {{ user.username }}!</p>
     <a href="{% url 'logout' %}" class="btn btn-primary" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
     <form id="logout-form" action="{% url 'logout' %}" method="post" style="display: none;">
         {% csrf_token %}
@@ -45,7 +44,6 @@
             </form>
 
             <!-- Buttons -->
-            <a href="{% url 'add_feel' post.id %}" class="btn btn-primary">Add Feel</a>
             {% if post.user == user or user.role == 'admin' or user.is_superuser %}
                 <a href="{% url 'update_post' post.id %}" class="btn btn-warning">Update</a>
                 <a href="{% url 'delete_post' post.id %}" class="btn btn-danger">Delete</a>

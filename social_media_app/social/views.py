@@ -103,3 +103,15 @@ def notifications(request):
         {"message": "You have a new feel!", "tag": "info"},
     ]
     return JsonResponse({"notifications": notifications})
+
+@login_required
+def delete_profile(request):
+    if request.method == 'POST':
+        # Delete the user's profile
+        user = request.user
+        user.delete()
+        # Log the user out
+        auth_logout(request)  # Use auth_logout here
+        # Redirect to the homepage
+        return redirect('home')
+    return render(request, 'social/delete_profile.html')

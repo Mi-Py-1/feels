@@ -11,7 +11,39 @@
         {% load static %}
 </head>
 <body>
-    <div class="container">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{% url 'home' %}">How are you feeling?</a>
+            <span class="navbar-text">
+                {% if user.is_authenticated %}
+                    Hello, {{ user.username }}!
+                {% endif %}
+            </span>
+            <div class="collapse navbar-collapse justify-content-end">
+                <ul class="navbar-nav">
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link btn btn-primary text-white me-2" href="{% url 'create_post' %}">Create Post</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link btn btn-danger text-white" href="{% url 'logout' %}">Logout</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link btn btn-primary text-white me-2" href="{% url 'login' %}">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link btn btn-outline-primary" href="{% url 'signup' %}">Sign Up</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-5 pt-4 pb-5">
         {% if messages %}
         <div class="container mt-3">
             {% for message in messages %}
@@ -21,11 +53,31 @@
                 </div>
             {% endfor %}
         </div>
-            {% endif %}
+        {% endif %}
         {% block content %}
-
         {% endblock %}
     </div>
+
+    <!-- Sticky Footer -->
+    <footer class="bg-light text-muted py-3 fixed-bottom">
+        <div class="container">
+            <div class="row text-center">
+                <!-- Left Column -->
+                <div class="col">
+                    <p class="mb-0">&copy; 2025 Feels App. All rights reserved.</p>
+                </div>
+                <!-- Center Column -->
+                <div class="col">
+                    <a href="mailto:support@feelsapp.com" class="text-decoration-none">Contact Us</a>
+                </div>
+                <!-- Right Column -->
+                <div class="col">
+                    <a href="{% url 'delete_profile' %}" class="text-decoration-none">Delete Profile</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
     <!-- Include Bootstrap JavaScript -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
