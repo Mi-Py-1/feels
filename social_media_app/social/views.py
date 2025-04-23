@@ -20,7 +20,9 @@ def signup(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
-            user = form.save()
+            user = form.save(commit=False)
+            user.role = 'user'  
+            user.save()
             login(request, user)
             return redirect('home')
     else:
@@ -33,10 +35,12 @@ def create_post(request):
         form = PostForm(request.POST)
         if form.is_valid():
             post = form.save(commit=False)
-            post.user = request.user
+            post.user = request.user  # Assign the logged-in user to the post
             post.save()
             messages.success(request, 'Post created successfully!')
             return redirect('home')
+        else:
+            messages.error(request, 'There was an error creating your post.')
     else:
         form = PostForm()
     return render(request, 'social/create_post.html', {'form': form})
