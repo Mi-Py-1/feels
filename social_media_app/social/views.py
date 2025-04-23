@@ -6,6 +6,7 @@ from django.core.paginator import Paginator
 from .models import Post, Feel
 from django.contrib import messages
 from django.http import JsonResponse
+from .forms import PostForm
 
 def home(request):
     posts = Post.objects.all().order_by('-created_at')  # Order posts by newest first
@@ -28,21 +29,29 @@ def signup(request):
 @login_required
 def create_post(request):
     if request.method == 'POST':
-        content = request.POST.get('content')
-        Post.objects.create(user=request.user, content=content)
-        messages.success(request, 'Post created successfully!')
-        return redirect('home')
-    return render(request, 'social/create_post.html')
+        form = PostForm(request.POST)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.user = request.user
+            post.save()
+            messages.success(request, 'Post created successfully!')
+            return redirect('home')
+    else:
+        form = PostForm()
+    return render(request, 'social/create_post.html', {'form': form})
 
 @login_required
 def update_post(request, post_id):
     post = get_object_or_404(Post, id=post_id, user=request.user)
     if request.method == 'POST':
-        post.content = request.POST.get('content')
-        post.save()
-        messages.success(request, 'Post updated successfully!')
-        return redirect('home')
-    return render(request, 'social/update_post.html', {'post': post})
+        form = PostForm(request.POST, instance=post)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Post updated successfully!')
+            return redirect('home')
+    else:
+        form = PostForm(instance=post)
+    return render(request, 'social/update_post.html', {'form': form})
 
 @login_required
 def delete_post(request, post_id):

@@ -27,6 +27,7 @@
                 <p class="card-text"><small class="text-muted">Posted on: {{ post.created_at }}</small></p>
                 <a href="{% url 'add_feel' post.id %}" class="btn btn-primary">Add Feel</a>
                 {% if post.user == user or user.is_staff %}
+                    <a href="{% url 'update_post' post.id %}" class="btn btn-warning">Update</a>
                     <a href="{% url 'delete_post' post.id %}" class="btn btn-danger">Delete</a>
                 {% endif %}
             </div>

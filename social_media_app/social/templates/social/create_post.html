@@ -3,12 +3,10 @@
 {% block title %}Create Post{% endblock %}
 
 {% block content %}
-<h1>Create Post</h1>
+<h1>Create a New Post</h1>
 <form method="post">
     {% csrf_token %}
-    <div class="form-group">
-        <textarea name="content" rows="4" cols="50" class="form-control"></textarea>
-    </div>
-    <button type="submit" class="btn btn-primary">Post</button>
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Create Post</button>
 </form>
 {% endblock %}

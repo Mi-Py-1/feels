@@ -6,9 +6,7 @@
 <h1>Update Post</h1>
 <form method="post">
     {% csrf_token %}
-    <div class="form-group">
-        <textarea name="content" rows="4" cols="50" class="form-control">{{ post.content }}</textarea>
-    </div>
-    <button type="submit" class="btn btn-primary">Update</button>
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Update Post</button>
 </form>
 {% endblock %}
