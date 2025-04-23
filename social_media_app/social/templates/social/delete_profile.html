@@ -6,11 +6,11 @@
 <div class="container mt-5">
     <h1>Are you sure you want to delete your profile?</h1>
     <div class="mt-4">
-        <form method="post" action="{% url 'delete_profile' %}">
+        <form method="post" action="{% url 'social:delete_profile' %}">
             {% csrf_token %}
             <button type="submit" class="btn btn-danger">Yes</button>
         </form>
-        <a href="{% url 'home' %}" class="btn btn-secondary ms-3">No</a>
+        <a href="{% url 'social:home' %}" class="btn btn-secondary ms-3">No</a>
     </div>
 </div>
 {% endblock %}

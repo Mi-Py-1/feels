@@ -1,6 +1,9 @@
 from django.urls import path
 from . import views
 
+# Define the namespace for the app
+app_name = 'social'
+
 urlpatterns = [
     path('', views.home, name='home'),
     path('signup/', views.signup, name='signup'),
@@ -11,4 +14,5 @@ urlpatterns = [
     path('add_feel/<int:post_id>/', views.add_feel, name='add_feel'),
     path('notifications/', views.notifications, name='notifications'),
     path('delete-profile/', views.delete_profile, name='delete_profile'),
+    path('reaction/add/<int:post_id>/', views.add_reaction, name='add_reaction'),  
 ]
