@@ -4,9 +4,13 @@
 
 {% block content %}
 <h1>Sign Up</h1>
+<p>Create an account to join the Social Media App!</p>
+
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit" class="btn btn-primary">Sign Up</button>
 </form>
+
+<p>Already have an account? <a href="{% url 'login' %}">Log in here</a>.</p>
 {% endblock %}
