@@ -1,5 +1,7 @@
 from django import forms
+from django.contrib.auth.forms import UserCreationForm
 from .models import Post
+from .models import CustomUser
 
 class PostForm(forms.ModelForm):
     class Meta:
@@ -23,3 +25,10 @@ class PostForm(forms.ModelForm):
         if len(content) > 500:
             raise forms.ValidationError("Content cannot exceed 500 characters.")
         return content
+    
+class CustomUserCreationForm(UserCreationForm):
+    role = forms.ChoiceField(choices=CustomUser.ROLE_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
+
+    class Meta:
+        model = CustomUser
+        fields = ['username', 'email', 'password1', 'password2', 'role']

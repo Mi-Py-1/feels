@@ -20,19 +20,39 @@
     <h2>Posts</h2>
     <!-- Loop through paginated posts -->
     {% for post in page_obj %}
-        <div class="card mb-3">
-            <div class="card-body">
-                <h5 class="card-title">{{ post.user.username }}</h5>
-                <p class="card-text">{{ post.content }}</p>
-                <p class="card-text"><small class="text-muted">Posted on: {{ post.created_at }}</small></p>
-                <a href="{% url 'add_feel' post.id %}" class="btn btn-primary">Add Feel</a>
-                {% if post.user == user or user.is_staff %}
-                    <a href="{% url 'update_post' post.id %}" class="btn btn-warning">Update</a>
-                    <a href="{% url 'delete_post' post.id %}" class="btn btn-danger">Delete</a>
-                {% endif %}
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">{{ post.user.username }}</h5>
+            <p class="card-text">{{ post.content }}</p>
+            <p class="card-text"><small class="text-muted">Posted on: {{ post.created_at }}</small></p>
+
+            <!-- Display Feels -->
+            <div>
+                <strong>Feels:</strong>
+                {% for feel in post.feel_set.all %}
+                    <p>{{ feel.user.username }} rated this post {{ feel.rating }}</p>
+                {% empty %}
+                    <p>No feels yet. Be the first to add one!</p>
+                {% endfor %}
             </div>
+
+            <!-- Form for Adding a Feel -->
+            <form method="post" action="{% url 'add_feel' post.id %}">
+                {% csrf_token %}
+                <label for="rating-{{ post.id }}">Your Feel:</label>
+                <input type="number" name="rating" id="rating-{{ post.id }}" min="1" max="10" required>
+                <button type="submit" class="btn btn-primary">Submit Feel</button>
+            </form>
+
+            <!-- Buttons -->
+            <a href="{% url 'add_feel' post.id %}" class="btn btn-primary">Add Feel</a>
+            {% if post.user == user or user.role == 'admin' %}
+                <a href="{% url 'update_post' post.id %}" class="btn btn-warning">Update</a>
+                <a href="{% url 'delete_post' post.id %}" class="btn btn-danger">Delete</a>
+            {% endif %}
         </div>
-    {% endfor %}
+    </div>
+{% endfor %}
 
     <!-- Pagination Controls -->
     <nav aria-label="Page navigation">
