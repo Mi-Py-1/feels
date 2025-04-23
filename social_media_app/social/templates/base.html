@@ -14,7 +14,7 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
         <div class="container-fluid">
-            <a class="navbar-brand" href="{% url 'home' %}">How are you feeling?</a>
+            <a class="navbar-brand" href="{% url 'social:home' %}">How are you feeling?</a>
             <span class="navbar-text">
                 {% if user.is_authenticated %}
                     Hello, {{ user.username }}!
@@ -24,17 +24,17 @@
                 <ul class="navbar-nav">
                     {% if user.is_authenticated %}
                         <li class="nav-item">
-                            <a class="nav-link btn btn-primary text-white me-2" href="{% url 'create_post' %}">Create Post</a>
+                            <a class="nav-link btn btn-primary text-white me-2" href="{% url 'social:create_post' %}">Create Post</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link btn btn-danger text-white" href="{% url 'logout' %}">Logout</a>
+                            <a class="nav-link btn btn-danger text-white" href="{% url 'social:logout' %}">Logout</a>
                         </li>
                     {% else %}
                         <li class="nav-item">
-                            <a class="nav-link btn btn-primary text-white me-2" href="{% url 'login' %}">Login</a>
+                            <a class="nav-link btn btn-primary text-white me-2" href="{% url 'social:login' %}">Login</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link btn btn-outline-primary" href="{% url 'signup' %}">Sign Up</a>
+                            <a class="nav-link btn btn-outline-primary" href="{% url 'social:signup' %}">Sign Up</a>
                         </li>
                     {% endif %}
                 </ul>
@@ -72,7 +72,7 @@
                 </div>
                 <!-- Right Column -->
                 <div class="col">
-                    <a href="{% url 'delete_profile' %}" class="text-decoration-none">Delete Profile</a>
+                    <a href="{% url 'social:delete_profile' %}" class="text-decoration-none">Delete Profile</a>
                 </div>
             </div>
         </div>

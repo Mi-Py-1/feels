@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout as auth_logout
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from .models import Post, Feel
+from .models import Post, Reaction, Feel
 from django.contrib import messages
 from django.http import JsonResponse
 from .forms import PostForm
@@ -129,3 +129,21 @@ def delete_profile(request):
         # Redirect to the homepage
         return redirect('home')
     return render(request, 'social/delete_profile.html')
+
+@login_required
+def add_reaction(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    if request.method == "POST":
+        reaction_type = request.POST.get("reaction_type") or json.loads(request.body).get("reaction_type")
+        if reaction_type in dict(Reaction.REACTION_TYPES):
+            reaction, created = Reaction.objects.get_or_create(
+                user=request.user,
+                post=post,
+                defaults={"reaction_type": reaction_type},
+            )
+            if not created:
+                reaction.reaction_type = reaction_type
+                reaction.save()
+            return JsonResponse({"success": True, "message": "Reaction recorded!"})
+        return JsonResponse({"success": False, "message": "Invalid reaction type."})
+    return JsonResponse({"success": False, "message": "Invalid request method."})

@@ -8,11 +8,11 @@
 
 <h1>Welcome to Feels. How are you Feeling?</h1>
 {% if user.is_authenticated %}
-    <a href="{% url 'logout' %}" class="btn btn-primary" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
-    <form id="logout-form" action="{% url 'logout' %}" method="post" style="display: none;">
+    <a href="{% url 'social:logout' %}" class="btn btn-primary" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
+    <form id="logout-form" action="{% url 'social:logout' %}" method="post" style="display: none;">
         {% csrf_token %}
     </form>
-    <a href="{% url 'create_post' %}" class="btn btn-primary">Create Post</a>
+    <a href="{% url 'social:create_post' %}" class="btn btn-primary">Create Post</a>
 {% endif %}
 
 {% if user.is_authenticated %}
@@ -35,8 +35,17 @@
                 {% endfor %}
             </div>
 
+            <!-- Reaction icons -->
+            <div class="reactions">
+                <button class="reaction-button" data-reaction="like" data-post-id="{{ post.id }}">👍 Like</button>
+                <button class="reaction-button" data-reaction="love" data-post-id="{{ post.id }}">❤️ Love</button>
+                <button class="reaction-button" data-reaction="laugh" data-post-id="{{ post.id }}">😂 Laugh</button>
+                <button class="reaction-button" data-reaction="sad" data-post-id="{{ post.id }}">😢 Sad</button>
+                <button class="reaction-button" data-reaction="angry" data-post-id="{{ post.id }}">😡 Angry</button>
+            </div>
+
             <!-- Form for Adding a Feel -->
-            <form method="post" action="{% url 'add_feel' post.id %}">
+            <form method="post" action="{% url 'social:add_feel' post.id %}">
                 {% csrf_token %}
                 <label for="rating-{{ post.id }}">Your Feel:</label>
                 <input type="number" name="rating" id="rating-{{ post.id }}" min="1" max="10" required>
@@ -45,8 +54,8 @@
 
             <!-- Buttons -->
             {% if post.user == user or user.role == 'admin' or user.is_superuser %}
-                <a href="{% url 'update_post' post.id %}" class="btn btn-warning">Update</a>
-                <a href="{% url 'delete_post' post.id %}" class="btn btn-danger">Delete</a>
+                <a href="{% url 'social:update_post' post.id %}" class="btn btn-warning">Update</a>
+                <a href="{% url 'social:delete_post' post.id %}" class="btn btn-danger">Delete</a>
             {% endif %}
         </div>
     </div>
@@ -71,8 +80,8 @@
         </ul>
     </nav>
 {% else %}
-    <a href="{% url 'login' %}" class="btn btn-primary">Login</a>
-    <a href="{% url 'signup' %}" class="btn btn-primary">Sign Up</a>
+    <a href="{% url 'social:login' %}" class="btn btn-primary">Login</a>
+    <a href="{% url 'social:signup' %}" class="btn btn-primary">Sign Up</a>
 {% endif %}
 
 <!-- Logout Modal -->
@@ -96,3 +105,5 @@
 </div>
 
 {% endblock %}
+
+<script src="{% static 'social/js/reactions.js' %}"></script>
