@@ -1,6 +1,19 @@
-document.addEventListener("DOMContentLoaded", function() {
-    // Show the logout modal if redirected from the logout view
-    if (window.location.search.includes("show_logout_modal=true")) {
-        $('#logoutModal').modal('show');
+function setupLogoutButton() {
+    const logoutButton = document.getElementById("logout-button");
+    if (logoutButton) {
+        logoutButton.addEventListener("click", function () {
+            fetch("/logout/", { method: "POST" })
+                .then((response) => {
+                    if (response.ok) {
+                        window.location.assign("/");
+                    }
+                });
+        });
     }
-});
+}
+
+// Initialize the logout button functionality
+document.addEventListener("DOMContentLoaded", setupLogoutButton);
+
+// Export the function for testing
+export { setupLogoutButton };
