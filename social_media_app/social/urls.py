@@ -10,4 +10,5 @@ urlpatterns = [
     path('delete_post/<int:post_id>/', views.delete_post, name='delete_post'),
     path('add_feel/<int:post_id>/', views.add_feel, name='add_feel'),
     path('notifications/', views.notifications, name='notifications'),
+    path('delete-profile/', views.delete_profile, name='delete_profile'),
 ]
