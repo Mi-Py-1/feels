@@ -3,6 +3,8 @@ from django.contrib.auth.forms import UserCreationForm
 from .models import Post
 from .models import CustomUser
 
+
+# This form is used to create a new post in the social media app.
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
@@ -18,14 +20,16 @@ class PostForm(forms.ModelForm):
             'content': 'Post Content',
         }
 
-    def clean_content(self):
+    def clean_content(self):  # Blank line added here
         content = self.cleaned_data.get('content')
         if not content or content.strip() == "":
             raise forms.ValidationError("Content cannot be empty.")
         if len(content) > 500:
-            raise forms.ValidationError("Content cannot exceed 500 characters.")
+            raise forms.ValidationError
+        ("Content cannot exceed 500 characters.")
         return content
-    
+
+
 class CustomUserCreationForm(UserCreationForm):
     class Meta:
         model = CustomUser

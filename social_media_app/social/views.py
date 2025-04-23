@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login, logout as auth_logout
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
@@ -9,25 +8,32 @@ from django.http import JsonResponse
 from .forms import PostForm
 from .forms import CustomUserCreationForm
 
+
 def home(request):
-    posts = Post.objects.all().order_by('-created_at')  # Order posts by newest first
-    paginator = Paginator(posts, 5)  # Show 5 posts per page
-    page_number = request.GET.get('page')  # Get the current page number from the URL
-    page_obj = paginator.get_page(page_number)  # Get the posts for the current page
+    # Order posts by newest first
+    posts = Post.objects.all().order_by('-created_at')
+    # Show 5 posts per page
+    paginator = Paginator(posts, 5)
+    # Get the current page number from the URL
+    page_number = request.GET.get('page')
+    # Get the posts for the current page
+    page_obj = paginator.get_page(page_number)
     return render(request, 'social/home.html', {'page_obj': page_obj})
+
 
 def signup(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
-            user.role = 'user'  
+            user.role = 'user'
             user.save()
             login(request, user)
             return redirect('home')
     else:
         form = CustomUserCreationForm()
     return render(request, 'registration/signup.html', {'form': form})
+
 
 @login_required
 def create_post(request):
@@ -45,6 +51,7 @@ def create_post(request):
         form = PostForm()
     return render(request, 'social/create_post.html', {'form': form})
 
+
 @login_required
 def update_post(request, post_id):
     post = get_object_or_404(Post, id=post_id, user=request.user)
@@ -58,6 +65,7 @@ def update_post(request, post_id):
         form = PostForm(instance=post)
     return render(request, 'social/update_post.html', {'form': form})
 
+
 @login_required
 def delete_post(request, post_id):
     post = get_object_or_404(Post, id=post_id)
@@ -66,14 +74,17 @@ def delete_post(request, post_id):
         post.delete()
         messages.success(request, 'Post deleted successfully!')
     else:
-        messages.error(request, 'You do not have permission to delete this post.')
+        messages.error(request,
+                       'You do not have permission to delete this post.')
     return redirect('home')
+
 
 @login_required
 def add_feel(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     if request.method == 'POST':
-        rating = request.POST.get('rating')  # Ensure the rating is passed in the POST data
+        # Ensure the rating is passed in the POST data
+        rating = request.POST.get('rating')
         if rating:
             feel, created = Feel.objects.get_or_create(
                 post=post,
@@ -91,9 +102,11 @@ def add_feel(request, post_id):
             messages.error(request, 'Rating is required to add a feel.')
     return redirect('home')
 
+
 def custom_logout(request):
     auth_logout(request)
     return redirect('/?show_logout_modal=true')
+
 
 @login_required
 def notifications(request):
@@ -103,6 +116,7 @@ def notifications(request):
         {"message": "You have a new feel!", "tag": "info"},
     ]
     return JsonResponse({"notifications": notifications})
+
 
 @login_required
 def delete_profile(request):
