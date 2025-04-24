@@ -1,1 +1,1 @@
-web: gunicorn feels.wsgi --log-file -
+web: cd social_media_app && gunicorn feels.wsgi --log-file -
