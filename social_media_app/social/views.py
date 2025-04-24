@@ -5,8 +5,11 @@ from django.core.paginator import Paginator
 from .models import Post, Feel
 from django.contrib import messages
 from django.http import JsonResponse
+from django.core.mail import send_mail
+from django.conf import settings
 from .forms import PostForm
 from .forms import CustomUserCreationForm
+from .forms import ContactForm
 
 
 def home(request):
@@ -129,3 +132,22 @@ def delete_profile(request):
         # Redirect to the homepage
         return redirect('home')
     return render(request, 'social/delete_profile.html')
+
+def contact_us(request):
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            # Send email
+            subject = f"Contact Us Message from {form.cleaned_data['name']}"
+            message = f"Message: {form.cleaned_data['message']}\n\nFeeling: {form.cleaned_data['feeling']}"
+            sender_email = form.cleaned_data['email']
+            recipient_list = ['feels@thisisnotanemail.com']
+
+            send_mail(subject, message, sender_email, recipient_list)
+
+            # Add success message
+            messages.success(request, 'Thank you for contacting us!')
+            return redirect('contact_us')
+    else:
+        form = ContactForm()
+    return render(request, 'social/contact_us.html', {'form': form})
